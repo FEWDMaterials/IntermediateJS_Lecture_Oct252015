@@ -1,43 +1,77 @@
-(function() { 	// protect the lemmings!
+(function() { // protect the lemmings
 
-	// REASONS WHY THIS KINDA SUCKS	
-	// 1. hardcoded selectors
-	// 2. no user control / options
-	// 3. no way to pause the loop
-	// 4. no way to set the timing of the transtion OR the pause after transition
-	// 5. no callbacks or methods exposed
+	var Slider = (function() {
+		function SimpleSlider( container, tickInterval ) {
+			this.$container = $( container );
+			this.tickerInterval = ( typeof tickInterval !== "undefined" ) ? tickInterval : 500;
+			this.getInitialVars();
 
-	
-	function slider() {
-		var $slider = $('.slider');
-		var numChildren = $('.slider__item').length;
-		var width = $('.container').outerWidth();
-		var currentSlide = 0;
+			this.start();
+		}
 
-		// var children = $slider.children().length;
-		// var children = $slider.find('> div').length;
+		SimpleSlider.prototype.getInitialVars = function() {
+			this.$slider = this.$container.find( '> div' );
+			this.numChildren = this.$slider.children().length;
+			this.width = this.$container.outerWidth();
+			this.currentSlide = 0;
+			this.isPlaying = true;
+		}
 
-		// TODO: make into a function
+		SimpleSlider.prototype.start = function() {
+			this.tickInterval = setInterval(
+				this.tick.bind(this),
+				this.tickerInterval
+			);
+		}
 
-		setInterval(function() {
-			++currentSlide;
-			$slider.css('left', -1*width*currentSlide + 'px');
+		SimpleSlider.prototype.pause = function() {
+			this.isPlaying = false;
+			clearInterval( this.tickInterval );
+		}
 
-			if ( currentSlide === numChildren - 1 ) {
-				currentSlide = -1;
+		SimpleSlider.prototype.play = function() {
+			this.isPlaying = true;
+			this.start();
+		}
+
+		SimpleSlider.prototype.getPlayState = function() {
+			return this.isPlaying;
+		}
+
+		SimpleSlider.prototype.tick = function() {
+			if ( this.isPlaying === false ) return;
+
+			++this.currentSlide;
+			this.$slider.css('left', -1*this.width*this.currentSlide + 'px');
+
+			if ( this.currentSlide === this.numChildren - 1 ) {
+				this.currentSlide = -1;
 			}
-		}, 500)
-			
-	}
+		}
 
-	slider();
+		// implement a .goNext() function
+		// it will check to see if paused, if not, first it will pause
+		// then, it will update currentSlide and move the slide over by ONE
+
+		return function( container, interval ) {
+			return new SimpleSlider( container, interval );
+		}
+
+	})();
+
+	var s1 = Slider( '.js-slide-1' );
+	var s2 = Slider( '.js-slide-2', 1500 );
+
+	$('.play').on('click', function() {
+		var state = s1.getPlayState();
+		console.log( state );
+		if ( state ) {
+			s1.pause();
+		}
+		else {
+			s1.play();
+		}
+		// s1.pause();
+	});
 
 })();
-
-
-
-
-
-
-
-
