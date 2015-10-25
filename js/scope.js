@@ -8,7 +8,7 @@ function greet( name  ) {
 function greetInFrench( name, greeting ) {
 	console.log( 'Look ma! I\'m greeting in french: ' + greeting );
 	var prependVal = "Bonjour ";
-	var greetVal = prependVal + name;	
+	var greetVal  prependVal + name;	
 }
 
 var greeting = greet( 'Daniel' );

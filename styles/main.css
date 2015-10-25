@@ -1,0 +1,26 @@
+div {
+	box-sizing: border-box;
+}
+
+.container {
+	width: 150px;
+    height: 150px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.slider {
+	width: 450px;
+    height: 150px;
+    position: absolute;
+    left: 0;
+    transition: left 0.3s ease-in-out;
+}
+
+.slider__item {
+	width: 150px;
+	height: 150px;
+	border: 1px solid black;
+	float: left;
+}
